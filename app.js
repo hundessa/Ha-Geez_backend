@@ -18,6 +18,9 @@ import instructorListRoute from "./routes/Instructors_list_route/instructors_lis
 import students_list_route from "./routes/Students_list_route/students_list_route.js";
 import Users from "./models/Student_Models/Student_Registration_Model/StudentRegistrationModel.js";
 import Roles from "./helpers/Roles.js";
+import CategoryCreationRoute from "./routes/Category_Creation_Route/categoryCreationRoute.js";
+import CategoryRetrievingRoute from "./models/Category_Creation/Category_Retrieving_Route/categoryRetrievingRoute.js";
+import ProfileEditRoute from "./routes/Profile_Edit_Route/proifileEditRoute.js";
 
 dotenv.config();
 
@@ -105,6 +108,12 @@ app.use("/", instructorListRoute);
 
 app.use("/", students_list_route);
 
+app.use("/", CategoryCreationRoute);
+
+app.use("/", CategoryRetrievingRoute);
+
+app.use("/", ProfileEditRoute);
+
 // app.use('/api/protected', verifyToken, (req, res) => {
 //   res.status(200).json({ message: 'This is a protected route.' });
 // });
@@ -123,7 +132,7 @@ app.get("/", (req, res) => {
   res.send("Welcome to");
 });
 
-app.listen(LOCALHOST_PORT || 3000, () => {
+app.listen(LOCALHOST_PORT , () => {
   console.log(`server listening on port ${LOCALHOST_PORT}`);
 });
 

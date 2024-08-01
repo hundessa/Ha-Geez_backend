@@ -8,8 +8,8 @@ if ( role !== "Student"){
   return  res.status(400).json({ message: "Invalid role"})
 }
 try {
-    const students = await Users.findAll({ where: {role}, attributes: ['firstname', 'lastname', 'email']});
-
+    // const students = await Users.findAll({ where: {role}, attributes: ['firstname', 'lastname', 'email']});
+const students = await Users.findAll({ where: {role}})
     return res.status(200).json({ students });
 }
 catch(err){

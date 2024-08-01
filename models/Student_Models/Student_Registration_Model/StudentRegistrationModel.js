@@ -30,6 +30,10 @@ const Users = sequelize.define("User", {
     type: DataTypes.STRING,
     allowNull: false,
   },
+  profilepicture: {
+    type: DataTypes.BLOB,
+    allowNull: true,
+  },
   role: {
     type: DataTypes.STRING,
     allowNull: false,

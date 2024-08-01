@@ -1,6 +1,3 @@
-import Users from "../../models/Student_Models/Student_Registration_Model/StudentRegistrationModel.js";
-import InstructorRegisters from "../../models/Instructor_Models/Instructor_Registration_Model/instructorRegisterModel.js";
-import { Op } from "sequelize"; // Import Sequelize's operators
 import sequelize from "../../configurations/sequelize.js";
 
 const instructor_list_controller = async (req, res) => {

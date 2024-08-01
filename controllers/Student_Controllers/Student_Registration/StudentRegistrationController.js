@@ -5,7 +5,7 @@ import { createToken } from "../../../middlewares/authentication_middleware/jwt_
 const studentRegistration = async (req, res) => {
 
   try {
-    console.log("request: ", req.body);
+    // console.log("request: ", req.body);
     const { firstname, lastname, username, email, phonenumber, password, role } = req.body;
     
 
@@ -24,12 +24,12 @@ const studentRegistration = async (req, res) => {
       email,
       phonenumber,
       password: hashedPassword,
-      // role,
+      role,
     });
     
-    const token = createToken({ id: user.id, email: user.email, role: user.role });
+    const token = createToken({ id: newUser.id, email: newUser.email, role: newUser.role });
 
-    res.status(201).json({ message: "Account Created",  role: user.role, firstname: user.firstname, email: user.email , token });
+    res.status(201).json({ message: "Account Created",  role: newUser.role, firstname: newUser.firstname, email: newUser.email , token });
   } catch (error) {
     console.log("Error: ", error);
     res.status(500).json({ message: "Server error" });

@@ -1,0 +1,78 @@
+version: '2.4'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASS: ${PG_PASSWORD}
+      DB_NAME: ha
+    ports:
+      - "4000:4000"
+    networks:
+      - ha-geez_backend_my_network
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: ha
+    ports:
+      - "5432:5432"
+    networks:
+      - ha-geez_backend_my_network
+
+networks:
+  ha-geez_backend_my_network:
+    driver: bridge
+
+
+
+
+
+
+# version: '3.8'
+# services:
+#   app:
+#     build: .
+#     environment:
+#       DB_HOST: postgres
+#       DB_PORT: 5432
+#       DB_USER: ${PG_USER}
+#       DB_PASS: ${PG_PASSWORD}
+#       DB_NAME: ${PG_DATABASE}
+#     ports:
+#       - "4000:4000"
+#     networks:
+#       - ha-geez_backend_my_network
+#     depends_on:
+#       postgres:
+#         condition: service_healthy
+
+#   postgres:
+#     image: postgres:latest
+#     environment:
+#       POSTGRES_USER: ${PG_USER}
+#       POSTGRES_PASSWORD: ${PG_PASSWORD}
+#       POSTGRES_DB: ${PG_DATABASE}
+#     ports:
+#       - "5432:5432"
+#     networks:
+#       - ha-geez_backend_my_network
+#     healthcheck:
+#       test: ["CMD-SHELL", "pg_isready -U ${PG_USER}"]
+#       interval: 10s
+#       retries: 5
+#       start_period: 5s
+#       timeout: 5s
+
+# networks:
+#   ha-geez_backend_my_network:
+#     driver: bridge

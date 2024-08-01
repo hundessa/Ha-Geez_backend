@@ -1,4 +1,4 @@
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import { createToken } from "../../middlewares/authentication_middleware/jwt_token.js";
 import Users from "../../models/Student_Models/Student_Registration_Model/StudentRegistrationModel.js";
 
