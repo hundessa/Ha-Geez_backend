@@ -1,11 +1,12 @@
 import bcrypt from "bcryptjs";
 import Users from "../../../models/Student_Models/Student_Registration_Model/StudentRegistrationModel.js";
-import { createToken } from "../../../middlewares/authentication_middleware/jwt_token.js";
+import generateToken  from "../../../utils/generateToken.js";
+import asyncHandler from "../../../middlewares/asyncHandler_middleware/asyncHandler.js";
 
-const studentRegistration = async (req, res) => {
+const studentRegistration = asyncHandler( async (req, res) => {
 
   try {
-    // console.log("request: ", req.body);
+
     const { firstname, lastname, username, email, phonenumber, password, role } = req.body;
     
 
@@ -27,13 +28,23 @@ const studentRegistration = async (req, res) => {
       role,
     });
     
-    const token = createToken({ id: newUser.id, email: newUser.email, role: newUser.role });
+    if (newUser) {
+      generateToken(res, newUser.id, newUser.email);
+      res.status(201).json({
+        id: newUser.id,
+        firstname: newUser.firstname,
+        lastname: newUser.lastname,
+        username: newUser.username,
+        email: newUser.email,
+        phonenumber: newUser.phonenumber,
+        role: newUser.role,
+      })
+    }
 
-    res.status(201).json({ message: "Account Created",  role: newUser.role, firstname: newUser.firstname, email: newUser.email , token });
   } catch (error) {
     console.log("Error: ", error);
     res.status(500).json({ message: "Server error" });
   }
-};
+});
 
 export default studentRegistration;

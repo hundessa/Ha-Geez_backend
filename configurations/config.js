@@ -3,11 +3,11 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-export const LOCALHOST_PORT = process.env.PORT;
+export const LOCALHOST_PORT = process.env.LOCALHOST_PORT;
 export const EMAIL = process.env.EMAIL;
 export const EMAIL_PASSWORD = process.env.EMAIL_PASSWORD;
 export const sessionSecret = process.env.SESSION_SECRET;
-export const accesstokensecret = process.env.ACCESS_TOKEN_SECRET
+export const accesstokensecret = process.env.JWT_SECRET
 
 const {Pool} = pkg;
 

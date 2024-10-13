@@ -1,5 +1,5 @@
 import { Sequelize } from "sequelize";
-import { pool } from "./config.js";
+// import { pool } from "./config.js";
 
 //  const sequelize = new Sequelize(
 //  "ha",
@@ -18,8 +18,8 @@ import { pool } from "./config.js";
 
 // const { Sequelize } = require('sequelize');
 
-const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USER, process.env.DB_PASS, {
-  host: process.env.DB_HOST,
+const sequelize = new Sequelize(process.env.PG_DATABASE, process.env.PG_USER, process.env.PG_PASSWORD, {
+  host: process.env.PG_HOST,
   dialect: 'postgres',
 });
 

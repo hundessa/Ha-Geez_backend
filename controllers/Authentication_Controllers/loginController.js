@@ -1,8 +1,9 @@
 import bcrypt from "bcryptjs";
-import { createToken } from "../../middlewares/authentication_middleware/jwt_token.js";
+import  generateToken  from "../../utils/generateToken.js";
 import Users from "../../models/Student_Models/Student_Registration_Model/StudentRegistrationModel.js";
+import asyncHandler from "../../middlewares/asyncHandler_middleware/asyncHandler.js";
 
-const login = async (req, res) => {
+const login = asyncHandler( async (req, res) => {
   const { email, password } = req.body;
 
   try {
@@ -16,17 +17,30 @@ const login = async (req, res) => {
     if (!isMatch) {
       return res.status(200).json({ message: "Incorrect Password" });
     }
+    
+    generateToken(res, user);
 
-    const accessToken = createToken(user); // Assuming createToken returns a valid token
+    res.status(200).json({
+      id: user.id,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      email: user.email,
+      role: user.role,
+    })
 
-    const { role, firstname, lastname, username, phonenumber } = user;
-    return res.status(200).json({ message: "Success", accessToken, role, firstname, email, lastname, username, phonenumber });
 
   } catch (error) {
     console.error("Error during login:", error);
     res.status(500).json({ message: "Server error", error: error.message });
   }
-};
+});
 
-export default login;
+const logoutUser = asyncHandler(async (req, res) => {
+  res.cookie('jwt', '', {
+      httpOnly: true,
+      expires: new Date(0),
+  });
+  res.status(200).json({ message: 'Logged out successfully'})
+  });
 
+export { login, logoutUser }

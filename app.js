@@ -3,6 +3,7 @@ import session from "express-session";
 import bodyParser from 'body-parser';
 import cors from "cors";
 import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
 import SequelizeStore from 'connect-session-sequelize';
 import bcrypt from "bcryptjs";
 import { LOCALHOST_PORT, sessionSecret } from "./configurations/config.js";
@@ -19,8 +20,9 @@ import students_list_route from "./routes/Students_list_route/students_list_rout
 import Users from "./models/Student_Models/Student_Registration_Model/StudentRegistrationModel.js";
 import Roles from "./helpers/Roles.js";
 import CategoryCreationRoute from "./routes/Category_Creation_Route/categoryCreationRoute.js";
-import CategoryRetrievingRoute from "./models/Category_Creation/Category_Retrieving_Route/categoryRetrievingRoute.js";
+import CategoryRetrievingRoute from "./routes/Category_Retrieving_Route/categoryRetrievingRoute.js";
 import ProfileEditRoute from "./routes/Profile_Edit_Route/proifileEditRoute.js";
+import { logoutUser } from "./controllers/Authentication_Controllers/loginController.js";
 
 dotenv.config();
 
@@ -37,6 +39,8 @@ app.use(
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieParser())
 
 const SequelizeStoreSession = SequelizeStore(session.Store);
 const sessionStore = new SequelizeStoreSession({
@@ -94,6 +98,8 @@ app.use("/", studentRegistrationRoute);
 
 app.use("/", loginRouter);
 
+app.use("/", logoutUser)
+
 app.use("/", contactUsRouter);
 
 app.use("/", instructorRegisterRouter);
@@ -114,14 +120,6 @@ app.use("/", CategoryRetrievingRoute);
 
 app.use("/", ProfileEditRoute);
 
-// app.use('/api/protected', verifyToken, (req, res) => {
-//   res.status(200).json({ message: 'This is a protected route.' });
-// });
-
-// // Other routes...
-// app.get('/api/public', (req, res) => {
-//   res.status(200).json({ message: 'This is a public route.' });
-// });
 
 app.use((req, res, next) => {
   console.log('Session data:', req.session);
