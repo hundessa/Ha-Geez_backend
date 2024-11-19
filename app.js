@@ -22,13 +22,14 @@ import Roles from "./helpers/Roles.js";
 import CategoryCreationRoute from "./routes/Category_Creation_Route/categoryCreationRoute.js";
 import CategoryRetrievingRoute from "./routes/Category_Retrieving_Route/categoryRetrievingRoute.js";
 import ProfileEditRoute from "./routes/Profile_Edit_Route/proifileEditRoute.js";
-import { logoutUser } from "./controllers/Authentication_Controllers/loginController.js";
+import getUserDataRoute from "./routes/Users_Routes/getUsersData.js";
 
 dotenv.config();
 
 const app = express();
 
 app.use(express.json());
+app.use(cookieParser())
 app.use(
   cors({
     origin: "http://localhost:5173",
@@ -40,27 +41,39 @@ app.use(
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieParser())
+const noCacheHeaders = (req, res, next) => {
+  res.setHeader(
+    "Cache-Control",
+    "no-store, no-cache, must-revalidate, proxy-revalidate"
+  );
+  res.setHeader("Pragma", "no-cache");
+  res.setHeader("Expires", "0");
+  res.setHeader("Surrogate-Control", "no-store");
+  next();
+};
 
-const SequelizeStoreSession = SequelizeStore(session.Store);
-const sessionStore = new SequelizeStoreSession({
-  db: sequelize,
-});
+// Apply globally or to specific routes
+app.use(noCacheHeaders);
 
-app.use(
-  session({
-    secret: sessionSecret,
-    store: sessionStore,
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-      secure: false, // Set to true if using HTTPS
-      maxAge: 300000, // 5 minutes for testing
-    },
-  })
-);
+// const SequelizeStoreSession = SequelizeStore(session.Store);
+// const sessionStore = new SequelizeStoreSession({
+//   db: sequelize,
+// });
 
-sessionStore.sync(); // Make sure the session table is created
+// app.use(
+//   session({
+//     secret: sessionSecret,
+//     store: sessionStore,
+//     resave: false,
+//     saveUninitialized: true,
+//     cookie: {
+//       secure: false, // Set to true if using HTTPS
+//       maxAge: 300000, // 5 minutes for testing
+//     },
+//   })
+// );
+
+// sessionStore.sync(); // Make sure the session table is created
 
 (async () => {
   try {
@@ -98,8 +111,6 @@ app.use("/", studentRegistrationRoute);
 
 app.use("/", loginRouter);
 
-app.use("/", logoutUser)
-
 app.use("/", contactUsRouter);
 
 app.use("/", instructorRegisterRouter);
@@ -120,6 +131,7 @@ app.use("/", CategoryRetrievingRoute);
 
 app.use("/", ProfileEditRoute);
 
+app.use("/", getUserDataRoute);
 
 app.use((req, res, next) => {
   console.log('Session data:', req.session);

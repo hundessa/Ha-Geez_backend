@@ -4,67 +4,30 @@ import asyncHandler from "../asyncHandler_middleware/asyncHandler.js";
 import { accesstokensecret } from "../../configurations/config.js";
 
 
+
 const authProtect = asyncHandler(async (req, res, next) => {
-  console.log("Auth middleware executed");
+  console.log("Cookies in request:", req.cookies); // Debug cookies here
+  const token = req.cookies.jwt; // Extract the cookie
+  console.log("Extracted token:", token);
 
-  let token = req.cookies.jwt;
-  console.log('Token:', token);
-
-  if (token) {
-    try {
-      const decoded = jwt.verify(token, accesstokensecret);
-      req.user = await Users.findOne({
-        where: { id: decoded.id },
-        attributes: { exclude: ["password"] },
-      });
-
-      console.log("Decoded Token:", decoded);
-      console.log("User found:", req.user);
-      
-      if (!req.user) {
-        return res.status(401).json({ message: "User not found" });
-      }
-      
-      next();
-    } catch (error) {
-      console.error("Token verification error:", error);
-      return res.status(401).json({ message: "Not authorized, token failed" });
-    }
-  } else {
+  if (!token) {
     return res.status(401).json({ message: "Not authorized, no token" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, accesstokensecret);
+    req.user = await Users.findByPk(decoded.id, {
+      attributes: { exclude: ["password"] },
+    });
+    if (!req.user) {
+      return res.status(401).json({ message: "User not found" });
+    }
+    next();
+  } catch (error) {
+    return res.status(401).json({ message: "Not authorized, token failed" });
   }
 });
 
-// const authProtect = asyncHandler(async (req, res, next) => {
-//   console.log("Auth middleware executed");
-
-//   const token = req.cookies.jwt;  // Get token from cookies
-//   console.log('Token:', token);
-
-//   if (!token) {
-//       return res.status(401).json({ message: "Not authorized, no token" });
-//   }
-
-//   try {
-//       const decoded = jwt.verify(token, accesstokensecret);
-//       req.user = await Users.findOne({
-//           where: { id: decoded.id },
-//           attributes: { exclude: ["password"] },
-//       });
-
-//       if (!req.user) {
-//           console.log("User not found with the given ID:", decoded.id);
-//           return res.status(401).json({ message: "User not found" });
-//       }
-
-//       console.log("Decoded Token:", decoded);
-//       console.log("User found:", req.user);
-//       next();
-//   } catch (error) {
-//       console.error("Token verification error:", error);
-//       return res.status(401).json({ message: "Not authorized, token failed" });
-//   }
-// });
 
 
 //Admin middleware

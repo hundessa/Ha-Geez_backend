@@ -33,7 +33,7 @@ const CourseDetail = sequelize.define("CourseDetail", {
     allowNull: false,
   },
   CourseImage: {
-    type: DataTypes.BLOB,
+    type: DataTypes.STRING,
     allowNull: false,
   },
 });

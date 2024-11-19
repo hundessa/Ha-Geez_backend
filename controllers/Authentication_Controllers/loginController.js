@@ -10,12 +10,12 @@ const login = asyncHandler( async (req, res) => {
     const user = await Users.findOne({ where: { email: email } });
 
     if (!user) {
-      return res.status(200).json({ message: "User not found" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
-      return res.status(200).json({ message: "Incorrect Password" });
+      return res.status(401).json({ message: "Incorrect Password" });
     }
     
     generateToken(res, user);
@@ -40,7 +40,15 @@ const logoutUser = asyncHandler(async (req, res) => {
       httpOnly: true,
       expires: new Date(0),
   });
+
+    // Set headers to prevent caching
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+  res.setHeader('Surrogate-Control', 'no-store');
+
   res.status(200).json({ message: 'Logged out successfully'})
   });
+
 
 export { login, logoutUser }

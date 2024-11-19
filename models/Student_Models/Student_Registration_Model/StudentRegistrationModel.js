@@ -39,6 +39,10 @@ const Users = sequelize.define("User", {
     allowNull: false,
     defaultValue: Roles.Student, 
   },
+  status: {
+    type: DataTypes.STRING,
+    defaultValue: "Inactive",
+  }
 });
 
 export default Users;
