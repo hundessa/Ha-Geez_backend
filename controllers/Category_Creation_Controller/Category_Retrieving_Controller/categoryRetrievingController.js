@@ -1,21 +1,19 @@
 import CategoryCreationModel from "../../../models/Category_Creation/categoryCreationModel.js";
 
 const CategoryRetrievingController = async (req, res) => {
-  const { role } = req.body;
+  // const { role } = req.body;
 
-  if (role !== "Admin") {
-    return res.status(200).json({ message: "Invalid role" });
-  }
+  // if (role !== "Admin") {
+  //   return res.status(200).json({ message: "Invalid role" });
+  // }
 
   try {
     const categories = await CategoryCreationModel.findAll();
     const categoriesDetails = categories.map((category) => ({
       categoryName: category.categoryName,
       categoryDescription: category.categoryDescription,
-      categoryImage: {
-        data: category.categoryImage,
-        contentType: category.categoryImageContentType
-      }
+      categoryImage: category.categoryImage,
+      status: category.status,
     }));
     console.log('Categories:', categoriesDetails); // Log the categories
     res.status(200).json(categoriesDetails);

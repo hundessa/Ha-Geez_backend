@@ -15,8 +15,12 @@ const CategoryCreationModel = sequelize.define(
             allowNull: false
         },
         categoryImage: {
-            type: DataTypes.BLOB,
+            type: DataTypes.STRING,
             allowNull: false
+        },
+        status: {
+            type: DataTypes.STRING,
+            defaultValue: "Active"
         }
     }
 );

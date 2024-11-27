@@ -38,7 +38,7 @@ const CourseDetail = sequelize.define("CourseDetail", {
   },
 });
 
-const CourseContent = sequelize.define("CourseContent", {
+const Module = sequelize.define("Module", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -51,4 +51,34 @@ const CourseContent = sequelize.define("CourseContent", {
       key: "id",
     },
   },
+  moduleName: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
 });
+
+const Lecture = sequelize.define("Lecture", {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  moduleId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: Module,
+      key: "id",
+    }
+  },
+});
+
+Module.hasMany(Lecture, {
+  foreignKey: 'moduleId',
+});
+
+Lecture.belongsTo(Module, {
+  foreignKey: 'moduleId'
+});
+
+
+export { CourseDetail, Module, Lecture }

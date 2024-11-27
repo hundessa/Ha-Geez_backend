@@ -41,6 +41,7 @@ const studentsDetails = students.map((stud) => ({
     email: stud.email,
     username: stud.username,
     phonenumber: stud.phonenumber,
+    status: stud.status,
 }))
 
     return res.status(200).json({ studentsDetails });

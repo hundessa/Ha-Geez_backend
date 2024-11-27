@@ -27,6 +27,7 @@ const instructor_list_controller = async (req, res) => {
       fieldofstudy: inst.fieldofstudy,
       yearsofexperiance: inst.yearsofexperiance,
       professionalcertificate: inst.professionalcertificate,
+      status: inst.status,
     }));
 
     return res.status(200).json({ instructorDetails });
