@@ -1,12 +1,25 @@
 import sequelize from "../../configurations/sequelize";
 import { DataTypes } from "sequelize";
+import instructorRegister from "../Instructor_Models/Instructor_Registration_Model/instructorRegisterModel";
 
-const CourseDetail = sequelize.define("CourseDetail", {
-  CourseOutCome: {
+const CourseDetailModel = sequelize.define("CourseDetail", {
+  id : {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  instructorId: {
+    type: DataTypes.INTEGER,
+    references: {
+      model: instructorRegister,
+      key: "id"
+    }
+  },
+  courseOutcome: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  CourseRequirements: {
+  courseRequirements: {
     type: DataTypes.STRING,
     allowNull: false,
   },
@@ -23,22 +36,21 @@ const CourseDetail = sequelize.define("CourseDetail", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  CourseCategory: {
-    type: DataTypes.STRING,
-    allowNull: false,
-    unique: true,
-  },
-  CourseLevel: {
+  courseCategory: {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  CourseImage: {
+  courseLevel: {
+    type: DataTypes.STRING,
+    allowNull: false,
+  },
+  courseImage: {
     type: DataTypes.STRING,
     allowNull: false,
   },
 });
 
-const Module = sequelize.define("Module", {
+const ModuleModel = sequelize.define("Module", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -57,7 +69,7 @@ const Module = sequelize.define("Module", {
   },
 });
 
-const Lecture = sequelize.define("Lecture", {
+const LectureModel = sequelize.define("Lecture", {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
@@ -72,13 +84,26 @@ const Lecture = sequelize.define("Lecture", {
   },
 });
 
-Module.hasMany(Lecture, {
-  foreignKey: 'moduleId',
+// CourseDetail to Module: One-to-Many
+CourseDetailModel.hasMany(ModuleModel, {
+  foreignKey: "courseDetailId",
+  onDelete: "CASCADE", // Optional: Ensures child records are deleted with parent
 });
 
-Lecture.belongsTo(Module, {
-  foreignKey: 'moduleId'
+ModuleModel.belongsTo(CourseDetailModel, {
+  foreignKey: "courseDetailId",
+});
+
+// Module to Lecture: One-to-Many
+ModuleModel.hasMany(LectureModel, {
+  foreignKey: "moduleId",
+  onDelete: "CASCADE",
+});
+
+LectureModel.belongsTo(ModuleModel, {
+  foreignKey: "moduleId",
 });
 
 
-export { CourseDetail, Module, Lecture }
+
+export { CourseDetailModel, ModuleModel, LectureModel }
